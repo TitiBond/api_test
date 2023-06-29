@@ -1,12 +1,13 @@
 import express from "express"
-const router = express.Router()
+import {accountService} from "../services/account.js";
 
-import { accountService } from "../services/"
 
-router.get('/', accountService.getAll)
-router.get('/:id', accountService.get)
-router.post('/', accountService.create)
-router.put('/:id', accountService.update)
-router.delete('/:id', accountService.delete)
+const routerAccount = express.Router()
 
-export default router
+routerAccount.get('/', accountService.getAll)
+routerAccount.get('/:id', accountService.get)
+routerAccount.post('/', accountService.create)
+routerAccount.put('/:id', accountService.update)
+routerAccount.delete('/:id', accountService.delete)
+
+export default routerAccount

@@ -1,4 +1,3 @@
-  
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,36 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Account {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  items Item[]
-  space Space?
+  id           Int                      @id @default(autoincrement())
+  name         String
+  email        String                   @unique
+  items        Item[]
+  space        Space?
   sharedSpaces SpaceSharedWithAccount[]
 }
 
 model Item {
-  id Int @id @default(autoincrement())
-  name String
-  account Account @relation(fields: [account_id], references: [id])
+  id         Int     @id @default(autoincrement())
+  name       String
+  account    Account @relation(fields: [account_id], references: [id])
   account_id Int
 }
 
 model Space {
-  id Int @id @default(autoincrement())
-  name String
-  account Account @relation(fields: [account_id],references: [id])
-  account_id Int @unique
+  id                 Int                      @id @default(autoincrement())
+  name               String
+  account            Account                  @relation(fields: [account_id], references: [id])
+  account_id         Int                      @unique
   accountsSharedWith SpaceSharedWithAccount[]
 }
 
 model SpaceSharedWithAccount {
-  account Account @relation(fields: [account_id],references: [id])
+  account    Account @relation(fields: [account_id], references: [id])
   account_id Int
-  space Space @relation(fields: [space_id],references: [id])
-  space_id Int
+  space      Space   @relation(fields: [space_id], references: [id])
+  space_id   Int
 
   @@id([account_id, space_id])
 }

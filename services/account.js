@@ -1,130 +1,121 @@
-import pkg from "@prisma/client"
-const { PrismaClient } = pkg
-const prisma = new PrismaClient()
-const { account: Account, space: Space, item: Item} = prisma
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
+const prisma = new PrismaClient();
 
-export default {
-    getAll(req,res) {
-        Account.findMany()
-            .then((data)=>{
-                res.status(200).send(data)
+export const accountService = {
+    getAll(req, res) {
+        prisma.account
+            .findMany()
+            .then((data) => {
+                res.status(200).send(data);
             })
-            .catch((error)=>{
+            .catch((error) => {
                 res.status(500).send({
-                    message: error.message || 'Des erreurs sont parvenues lors de la recherche de Compte'
-                })
-            })
-
+                    message: error.message || 'Des erreurs sont survenues lors de la recherche des comptes',
+                });
+            });
     },
-    get(req,res) {
-        const { id } = req.params
 
-        Account.findUnique({
-            where: {
-                id: parseInt(id)
-            }
-        })
-            .then((data)=>{
-                data
-                    ? res.status(200).send(data)
-                    : res.status(404).send({
-                        message: `Impossible de trouver un compte avec l'id = ${id}`
-                    })
+    get(req, res) {
+        const { id } = req.params;
+
+        prisma.account
+            .findUnique({
+                where: {
+                    id: parseInt(id),
+                },
             })
-            .catch((error)=>{
-                res.status(500).send({
-                    message: error.message || `Des erreurs sont parvenues lors de la recherche de Compte avec l'id = ${id}`
-                })
-                 
-            })
-
-    },
-    create(req,res) {
-        const { name, email } = req.body
-
-        Account.create({
-            data: {
-                name: name,
-                email: email,
-                space: {
-                    create: [
-                        {name : `${name} Space`}
-                    ]
-
+            .then((data) => {
+                if (data) {
+                    res.status(200).send(data);
+                } else {
+                    res.status(404).send({
+                        message: `Impossible de trouver un compte avec l'id = ${id}`,
+                    });
                 }
-            }
-        })
-            .then(()=>{
+            })
+            .catch((error) => {
+                res.status(500).send({
+                    message: error.message || `Des erreurs sont survenues lors de la recherche du compte avec l'id = ${id}`,
+                });
+            });
+    },
+
+    create(req, res) {
+        const { name, email } = req.body;
+
+        prisma.account
+            .create({
+                data: {
+                    name: name,
+                    email: email,
+                    space: {
+                        create: {
+                            name: `${name} Space`,
+                        },
+                    },
+                },
+            })
+            .then(() => {
                 res.status(201).send({
-                    message: `Le compte a bien été créé`
-                })
+                    message: `Le compte a bien été créé`,
+                });
             })
-            .catch((error)=>{
+            .catch((error) => {
                 res.status(500).send({
-                    message: error.message || `Des erreurs sont parvenues lors de la création du Compte`
-                })
-                 
-            })
-
+                    message: error.message || `Des erreurs sont survenues lors de la création du compte`,
+                });
+            });
     },
-    update(req,res) {
-        const { id } = req.params
-        const { name, email } = req.body
 
-        Account.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: {
-                name: name,
-                email: email
-            }
-        })
-            .then(()=>{
+    update(req, res) {
+        const { id } = req.params;
+        const { name, email } = req.body;
+
+        prisma.account
+            .update({
+                where: {
+                    id: parseInt(id),
+                },
+                data: {
+                    name: name,
+                    email: email,
+                },
+            })
+            .then(() => {
                 res.status(200).send({
-                    message: `Le compte a bien été mis à jour`
-                })
+                    message: `Le compte a bien été mis à jour`,
+                });
             })
-            .catch((error)=>{
+            .catch((error) => {
                 res.status(500).send({
-                    message: error.message || `Des erreurs sont parvenues lors de la mis a jour du Compte avec l'id = ${id}`
-                })
-                 
-            })
-
+                    message: error.message || `Des erreurs sont survenues lors de la mise à jour du compte avec l'id = ${id}`,
+                });
+            });
     },
-    delete(req,res) {
-        const { id } = req.params
 
-        const deleteSpace = Space.delete({
-            where : {
-                account_id: parseInt(id)
-            }
-        })
-        const deleteItems = Item.deleteMany({
-            where : {
-                account_id: parseInt(id)
-            }
-        })
+    delete(req, res) {
+        const { id } = req.params;
 
-        const deleteAccount = Account.delete({
-            where: {
-                id: parseInt(id)
-            }
-        })
-
-        prisma
-            .$transaction([deleteSpaces,deleteItems,deleteAccount])
-            .then(()=>{
+        prisma.account
+            .delete({
+                where: {
+                    id: parseInt(id),
+                },
+                include: {
+                    space: true,
+                },
+            })
+            .then(() => {
                 res.status(200).send({
-                    message: `Le compte a bien été supprimé`
-                })
+                    message: `Le compte a bien été supprimé`,
+                });
             })
-            .catch((error)=>{
+            .catch((error) => {
                 res.status(500).send({
-                    message: error.message || `Des erreurs sont parvenues lors de la supression du Compte avec l'id = ${id}`
-                })
-                 
-            })
+                    message: error.message || `Des erreurs sont survenues lors de la suppression du compte avec l'id = ${id}`,
+                });
+            });
     },
-}
+};
+
