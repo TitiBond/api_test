@@ -1,13 +1,12 @@
-import express from "express"
-import {accountService} from "../services/account.js";
+import express from 'express';
+import { accountController } from '../controllers/accountController.js';
 
+const accountRouter = express.Router();
 
-const routerAccount = express.Router()
+accountRouter.get('/', accountController.getAllAccounts);
+accountRouter.get('/:id', accountController.getAccountById);
+accountRouter.post('/', accountController.createAccount);
+accountRouter.put('/:id', accountController.updateAccount);
+accountRouter.delete('/:id', accountController.deleteAccount);
 
-routerAccount.get('/', accountService.getAll)
-routerAccount.get('/:id', accountService.get)
-routerAccount.post('/', accountService.create)
-routerAccount.put('/:id', accountService.update)
-routerAccount.delete('/:id', accountService.delete)
-
-export default routerAccount
+export default accountRouter;
