@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import accountRouter from "./routes/account.js";
 import itemRouter from "./routes/item.js"
+import registerRouter from "./routes/register.js"
 
 const PORT = process.env.SERVER_PORT || 3000;
 const server = express();
@@ -10,6 +11,7 @@ const server = express();
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(cors());
+server.use(express.static('src'))
 
 server.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,6 +20,11 @@ server.use((req, res, next) => {
     next();
 });
 
+/*server.get('/', (req, res) => {
+    res.status(200).json({
+        message: "Server is working!.."
+    });
+});*/
 server.get('/', (req, res) => {
     res.status(200).json({
         message: "Server is working!.."
@@ -26,6 +33,7 @@ server.get('/', (req, res) => {
 
 server.use('/account', accountRouter);
 server.use('/item', itemRouter)
+server.use('/register', registerRouter)
 
 server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

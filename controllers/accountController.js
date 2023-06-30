@@ -26,14 +26,14 @@ export const accountController = {
 
     createAccount: async (req, res) => {
 
-        let { name, email } = req.body;
+        let { name, email, password } = req.body;
         if(name.length < 5){
             name = "condition"
         }
 
         
         try {
-            const createdAccount = await accountService.create(name, email);
+            const createdAccount = await accountService.create(name, email, password);
             res.json(createdAccount);
         } catch (error) {
             res.status(500).json({ error: "Échec de la création du compte" });

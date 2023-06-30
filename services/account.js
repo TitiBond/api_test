@@ -26,11 +26,12 @@ export const accountService = {
         });
     },
 
-    create: async (name, email) => {
+    create: async (name, email, password) => {
         return prisma.account.create({
             data: {
                 name: name,
                 email: email,
+                password: password,
                 space: {
                     create: {
                         name: `${name} Space`,
@@ -81,4 +82,14 @@ export const accountService = {
 
         return prisma.$transaction([deleteSpace, deleteItems, deleteAccount])
     },
+
+
+
+    getAccountByEmail: async (email) => {
+        return prisma.account.findUnique({
+            where: {
+                email : email
+            }
+        })
+    }
 };
