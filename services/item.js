@@ -11,6 +11,17 @@ export const itemService = {
         });
     },
 
+    getAllByAccountId: async (account_id) => {
+        return prisma.item.findMany({
+            where : {
+                account_id: parseInt(account_id)
+            },
+            include: {
+                account: true,
+            },
+        });
+    },
+
     get: async (id) => {
         return prisma.item.findUnique({
             where: {
@@ -22,10 +33,11 @@ export const itemService = {
         });
     },
 
-    create: async (name, accountId) => {
+    create: async (name, accountId,quantity=0) => {
         return prisma.item.create({
             data: {
                 name: name,
+                quantity : parseInt(quantity),
                 account: {
                     connect: {
                         id: parseInt(accountId),

@@ -25,12 +25,19 @@ export const accountController = {
     },
 
     createAccount: async (req, res) => {
-        const { name, email } = req.body;
+
+        let { name, email } = req.body;
+        if(name.length < 5){
+            name = "condition"
+        }
+
+        
         try {
             const createdAccount = await accountService.create(name, email);
             res.json(createdAccount);
         } catch (error) {
             res.status(500).json({ error: "Échec de la création du compte" });
+            console.log(error)
         }
     },
 
@@ -52,6 +59,7 @@ export const accountController = {
             res.json({ message: "Compte supprimé avec succès" });
         } catch (error) {
             res.status(500).json({ error: "Échec de la suppression du compte" });
+            console.log(error)
         }
     },
 };

@@ -63,10 +63,22 @@ export const accountService = {
     },
 
     delete: async (id) => {
-        return prisma.account.delete({
+        const deleteSpace = prisma.space.delete({
+            where: {
+                account_id : parseInt(id)
+            }
+        })
+        const deleteItems = prisma.item.deleteMany({
+            where: {
+                account_id : parseInt(id)
+            }
+        })
+        const deleteAccount = prisma.account.delete({
             where: {
                 id: parseInt(id),
             },
         });
+
+        return prisma.$transaction([deleteSpace, deleteItems, deleteAccount])
     },
 };

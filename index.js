@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import accountRouter from "./routes/account.js";
+import itemRouter from "./routes/item.js"
 
 const PORT = process.env.SERVER_PORT || 3000;
 const server = express();
@@ -24,6 +25,7 @@ server.get('/', (req, res) => {
 });
 
 server.use('/account', accountRouter);
+server.use('/item', itemRouter)
 
 server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

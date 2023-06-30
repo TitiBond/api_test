@@ -1,7 +1,6 @@
 {
   "name": "api_pharma",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -25,5 +24,6 @@
   },
   "prisma": {
     "schema": "db/schema.prisma"
-  }
+  },
+  "description": ""
 }

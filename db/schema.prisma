@@ -19,6 +19,7 @@ model Account {
 model Item {
   id         Int     @id @default(autoincrement())
   name       String
+  quantity   Int     @default(0)
   account    Account @relation(fields: [account_id], references: [id])
   account_id Int
 }
